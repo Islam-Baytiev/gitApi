@@ -8,14 +8,15 @@ class View {
       if (event.target.classList.contains('result__btn')) {
         event.target.parentElement.remove();
       }
-
       if (
           event.target.classList.contains('btn__span-left') ||
           event.target.classList.contains('btn__span-right')
       ) {
+        this.result.removeEventListener('click', event)
         event.target.parentElement.parentElement.remove();
       }
     })
+
 
   }
 
@@ -44,9 +45,6 @@ class View {
       this.resUser.append(this.btn);
       this.result.append(this.resUser);
     })
-    if (this.btn) {
-      console.log(this.btn)
-    }
   }
 }
 
@@ -54,7 +52,7 @@ class View {
 class Search  {
   constructor(View) {
     this.viev = View;
-    this.viev.inputSearch.addEventListener('keyup', this.debounce(this.searchUsers.bind(this),550));
+    this.viev.inputSearch.addEventListener('input', this.debounce(this.searchUsers.bind(this),550));
   }
 
   async searchUsers() {
@@ -63,9 +61,14 @@ class Search  {
       return await fetch(`${url}?q=${this.viev.inputSearch.value}&per_page=5`).then(res => {
         if (res.ok) {
           res.json().then(res => {
-            res.items.forEach(user => {
-              this.viev.createUser(user)
-            })
+            if (res.items.length) {
+              res.items.forEach(user => {
+                this.viev.createUser(user)
+              })
+            }
+            else {
+              this.viev.inputList.innerHTML = "Такого репозитория не существует"
+            }
           })
         }
       })
