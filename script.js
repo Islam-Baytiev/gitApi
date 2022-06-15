@@ -12,8 +12,8 @@ class View {
           event.target.classList.contains('btn__span-left') ||
           event.target.classList.contains('btn__span-right')
       ) {
-        this.result.removeEventListener('click', event)
         event.target.parentElement.parentElement.remove();
+        this.result.removeEventListener('click', event)
       }
     })
 
